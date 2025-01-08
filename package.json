@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon -r dotenv/config src/index.js",
-    "start": "node index.js"
+    "dev": "nodemon -r dotenv/config ./src/index.js",
+    "start": "node ./src/index.js"
   },
   "author": "Aditya Narayan",
   "license": "ISC",
