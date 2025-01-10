@@ -1,9 +1,61 @@
 import asyncHandler from "../utilities/asyncHandler.js";
+import ApiError from "../utilities/ApiError.js";
+import uploadOnCloudinary from "../utilities/cloudinary.js";
+import ApiResponse from "../utilities/ApiResponse.js";
+import { Users } from "../models/users.models.js";
+
 
 const registerUser = asyncHandler( async (req, res) => {
-    res.status(200).json({
-        message: "ok"
-    });
+    
+    // getting user details from frontend through req.body;
+    const {fullname, email, username, password} = req.body;
+    console.log(` Name : ${fullname}\n Email : ${email}\n Username : ${username}\n Password: ${password}`);
+    
+    // checking if the data sent is valid
+    if(
+        [fullname, email, username, password].some((field) => {
+        return (field?.trim() === "")
+        })
+    ) {
+        throw new ApiError(400,"All Feilds are Required");
+    }
+
+    //checking if User already exits
+    if(await Users.findOne({$or : [{username : username}, {email : email}]})){
+        throw new ApiError(409,"User Already exists [same username or password]");
+    }
+
+    const avatarLocalPath = req.files?.avatar[0]?.path;
+    const coverLocalPath = req.files?.coverimage[0]?.path;
+
+    //Checking if avatar image is included or not
+    if(!avatarLocalPath){
+        throw new ApiError(400,"Avatar image required");
+    }
+
+    const avatarResponse = await uploadOnCloudinary(avatarLocalPath);
+    const coverImageResponse = await uploadOnCloudinary(coverLocalPath);
+    
+    if(!avatarResponse){
+        throw new ApiError(500,"Failed to upload the avatar image");
+    }
+
+    const user = await Users.create([{
+        fullname: fullname,
+        email: email,
+        username: username.toLowerCase(),
+        password: password,
+        avatar: avatarResponse.url,
+        coverImage: coverImageResponse?.url ?? ""
+    }]);
+
+    const createdUser =  await Users.findById(user._id).select("-password -refreshToken");
+    if(!createdUser){
+        throw new ApiError(500,"Error in database Operation Create : USER");
+    }
+
+    return res.status(201).json(new ApiResponse(200, createdUser, "User Created SuccessFully"));
+    
 });
 
 
