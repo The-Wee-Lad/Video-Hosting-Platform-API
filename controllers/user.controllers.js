@@ -9,7 +9,7 @@ const registerUser = asyncHandler( async (req, res) => {
     
     // getting user details from frontend through req.body;
     const {fullname, email, username, password} = req.body;
-        
+
     // checking if the data sent is valid
     if(
         [fullname, email, username, password].some((field) => {
@@ -53,7 +53,7 @@ const registerUser = asyncHandler( async (req, res) => {
     if(!createdUser){
         throw new ApiError(500,"Error in database Operation Create : USER");
     }
-    await Users.findByIdAndDelete(user[0]._id);
+    
     return res.status(201).json(new ApiResponse(200, createdUser, "User Created SuccessFully"));
     
 });
