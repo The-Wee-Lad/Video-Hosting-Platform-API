@@ -9,8 +9,7 @@ const registerUser = asyncHandler( async (req, res) => {
     
     // getting user details from frontend through req.body;
     const {fullname, email, username, password} = req.body;
-    console.log(` Name : ${fullname}\n Email : ${email}\n Username : ${username}\n Password: ${password}`);
-    
+        
     // checking if the data sent is valid
     if(
         [fullname, email, username, password].some((field) => {
@@ -24,9 +23,9 @@ const registerUser = asyncHandler( async (req, res) => {
     if(await Users.findOne({$or : [{username : username}, {email : email}]})){
         throw new ApiError(409,"User Already exists [same username or password]");
     }
-
-    const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverLocalPath = req.files?.coverimage[0]?.path;
+    
+    const avatarLocalPath = req.files?.avatar?.[0]?.path;
+    const coverLocalPath = req.files?.coverImage?.[0]?.path;
 
     //Checking if avatar image is included or not
     if(!avatarLocalPath){
@@ -35,7 +34,7 @@ const registerUser = asyncHandler( async (req, res) => {
 
     const avatarResponse = await uploadOnCloudinary(avatarLocalPath);
     const coverImageResponse = await uploadOnCloudinary(coverLocalPath);
-    
+
     if(!avatarResponse){
         throw new ApiError(500,"Failed to upload the avatar image");
     }
@@ -49,11 +48,12 @@ const registerUser = asyncHandler( async (req, res) => {
         coverImage: coverImageResponse?.url ?? ""
     }]);
 
-    const createdUser =  await Users.findById(user._id).select("-password -refreshToken");
+    const createdUser =  await Users.findById(user[0]._id).select("-password -refreshToken");
+    
     if(!createdUser){
         throw new ApiError(500,"Error in database Operation Create : USER");
     }
-
+    await Users.findByIdAndDelete(user[0]._id);
     return res.status(201).json(new ApiResponse(200, createdUser, "User Created SuccessFully"));
     
 });
