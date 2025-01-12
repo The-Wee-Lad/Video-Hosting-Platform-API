@@ -4,7 +4,7 @@ const asyncHandler = (func) => {
     }
 }
 
-export default asyncHandler;
+export { asyncHandler };
 
 // const asyncHandler = (fn) => {
 //     return async (res, req, next) => {

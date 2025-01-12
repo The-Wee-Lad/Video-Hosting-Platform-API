@@ -1,7 +1,7 @@
-import asyncHandler from "../utilities/asyncHandler.js";
-import ApiError from "../utilities/ApiError.js";
-import uploadOnCloudinary from "../utilities/cloudinary.js";
-import ApiResponse from "../utilities/ApiResponse.js";
+import { asyncHandler } from "../utilities/asyncHandler.js";
+import { ApiError } from "../utilities/ApiError.js";
+import { uploadOnCloudinary } from "../utilities/cloudinary.js";
+import { ApiResponse } from "../utilities/ApiResponse.js";
 import { Users } from "../models/users.models.js";
 
 
@@ -53,10 +53,12 @@ const registerUser = asyncHandler( async (req, res) => {
     if(!createdUser){
         throw new ApiError(500,"Error in database Operation Create : USER");
     }
-    
+
     return res.status(201).json(new ApiResponse(200, createdUser, "User Created SuccessFully"));
     
 });
 
 
-export default registerUser;
+export { 
+    registerUser,
+};
