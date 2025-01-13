@@ -4,6 +4,7 @@ import { uploadOnCloudinary } from "../utilities/cloudinary.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import { Users } from "../models/users.models.js";
 import { cookieOptions } from "../constants.js";
+import jwt from "jsonwebtoken";
 
 const generateAccessAndRefreshToken = async (userid) => {
     
@@ -105,7 +106,38 @@ const loginUser = asyncHandler( async (req, res) => {
 
 });
 
+const refreshAccessToken = asyncHandler( async (req, res) => {
+    try {
+        const receivedRefreshToken = req.cookies.refreshToken || req.body.refreshToken ;
+        const decodedRefreshToken = jwt.verify(receivedRefreshToken, process.env.REFRESH_TOKEN_SECRET);
+        const userid = decodedRefreshToken?._id;
+        const user = await Users.findById(userid);
+
+        if(!user){
+            throw new ApiError(401," Invalid Refresh Token");
+        }
+
+        const storedRefreshToken = user?.refreshToken;
+
+        if(storedRefreshToken !==  receivedRefreshToken){
+            throw new ApiError(401,"Refresh Token Expired");
+        }
+
+        const {accessToken, refreshToken} =await generateAccessAndRefreshToken(user?._id);        
+        
+        res
+        .status(200)
+        .cookie("accessToken",accessToken,cookieOptions)
+        .cookie("refreshToken",refreshToken)
+        .json(new ApiResponse(200,{accessToken, refreshToken},"new accessToken generated successfully"))
+
+    } catch (error) {
+        throw new ApiError(401,`JWT Refresh Token could not be verified : ${error.name} : ${error.message}`);
+    }
+});
+
 export { 
     registerUser,
-    loginUser
+    loginUser,
+    refreshAccessToken
 };

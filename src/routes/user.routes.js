@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { registerUser, loginUser } from "../controllers/user.controllers.js";
+import { registerUser, loginUser, refreshAccessToken } from "../controllers/user.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 
 const  router  = Router({mergeParams : true});
@@ -20,5 +20,8 @@ router.route("/register").post(
 );
 
 router.route("/login").post(upload.none(),loginUser);
+
+router.route("/refresh-accessToken").post(refreshAccessToken);
+
 
 export default router;
