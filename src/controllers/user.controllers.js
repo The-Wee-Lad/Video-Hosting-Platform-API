@@ -102,7 +102,7 @@ const loginUser = asyncHandler( async (req, res) => {
     .status(200)
     .cookie("accessToken",accessToken,cookieOptions)
     .cookie("refreshToken",refreshToken,cookieOptions)
-    .json(new ApiResponse(200,user,"User authenticated"));
+    .json(new ApiResponse(200,{user: user, accessToken, refreshToken},"User authenticated"));
 
 });
 
@@ -136,8 +136,25 @@ const refreshAccessToken = asyncHandler( async (req, res) => {
     }
 });
 
+const logout = asyncHandler( async (req, res) => {
+
+    const user = await Users.findByIdAndUpdate(req.user._id, {$set : {refreshToken : undefined}}, {new: true});
+    
+    if(!user || user.refreshToken){
+        throw new ApiError(500,"could not change database");
+        
+    }
+
+    res
+    .status(200)
+    .clearCookie("refreshToken",cookieOptions)
+    .clearCookie("accessToken",cookieOptions)
+    .json(new ApiResponse(200,{},"User Logged Out"));
+});
+
 export { 
     registerUser,
     loginUser,
-    refreshAccessToken
+    refreshAccessToken,
+    logout
 };
