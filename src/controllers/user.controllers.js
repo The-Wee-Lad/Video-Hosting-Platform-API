@@ -13,8 +13,7 @@ const generateAccessAndRefreshToken = async (userid) => {
         const accessToken = user.generateAccessToken();
         const refreshToken = user.generateRefreshToken();
         user.refreshToken = refreshToken;
-        await user.save();
-
+        await user.save();        
         return { accessToken, refreshToken};
 
     } catch (error) {
@@ -92,9 +91,12 @@ const loginUser = asyncHandler( async (req, res) => {
         throw new ApiError(401," Invalid Credentials ");
     }
 
-    const {accessToken, refreshToken} = generateAccessAndRefreshToken(user._id);
+    const {accessToken, refreshToken} = await generateAccessAndRefreshToken(user._id);
     user = await Users.findById(user._id).select("-password -refreshToken");
     
+    
+    
+
     res
     .status(200)
     .cookie("accessToken",accessToken,cookieOptions)

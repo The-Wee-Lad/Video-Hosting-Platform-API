@@ -118,4 +118,5 @@ dist
 .pnp.*
 settings.json
 
+.src/public/temp
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Node
