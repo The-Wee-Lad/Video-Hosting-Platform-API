@@ -9,6 +9,7 @@ const uploadOnCloudinary = async (localFilePath) => {
             api_key: process.env.CLOUDINARY_API_KEY, 
             api_secret: process.env.CLOUDINARY_API_SECRET
         });
+        
         if(!localFilePath || !fs.existsSync(localFilePath))  return null;
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: "auto"
