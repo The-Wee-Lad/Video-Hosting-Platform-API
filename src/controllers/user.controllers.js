@@ -138,13 +138,12 @@ const refreshAccessToken = asyncHandler( async (req, res) => {
 
 const logout = asyncHandler( async (req, res) => {
 
-    const user = await Users.findByIdAndUpdate(req.user._id, {$set : {refreshToken : undefined}}, {new: true});
+    const user = await Users.findByIdAndUpdate(req.user._id, {$set: {refreshToken: null}}, {new: true});
+    console.log(user);
     
     if(!user || user.refreshToken){
-        throw new ApiError(500,"could not change database");
-        
+        throw new ApiError(500,"could not change database");  
     }
-
     res
     .status(200)
     .clearCookie("refreshToken",cookieOptions)
@@ -152,9 +151,161 @@ const logout = asyncHandler( async (req, res) => {
     .json(new ApiResponse(200,{},"User Logged Out"));
 });
 
+
+const changePassword = asyncHandler( async (req,res) => {
+    
+    const {oldPassword, newPassword, confirmPassword} = req.body;
+    
+    if([oldPassword, newPassword, confirmPassword].some((elem => {
+        return !(elem?.trim());
+    }))){
+        throw new ApiError(400,"All feilds are required");
+    }
+
+    if(newPassword !== confirmPassword){
+        throw new ApiError(400,"confirm Password doesn't match the new Password!!");
+    }
+
+    let user = req.user;
+    if(!(await user.isPasswordCorrect(oldPassword))){
+        throw new ApiError(400,"Not Correct Password");
+    }
+
+    user = await Users.findById(user?._id);
+    user.password = newPassword;
+    const {accessToken, refreshToken} =await generateAccessAndRefreshToken(user?._id);
+    user.save();
+    
+    res
+    .status(200)
+    .cookie("accessToken", accessToken, cookieOptions)
+    .cookie("refreshToken", refreshToken, cookieOptions)
+    .json(new ApiResponse(200, {accessToken, refreshToken}, "Password Changed Carefully"));
+});
+
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+    const user = await Users.findById(req.user._id).select("-refreshToken -password");
+    if(!user){
+        throw new ApiError(401,"Unexected error occurred in getCurrentUser");
+    }
+    res
+    .status(200)
+    .json(new ApiResponse(200, user, "Current user Data SuccessFully sent"));
+});
+
+const updateAccountDetails = asyncHandler( async (req,res) => {
+    
+    let {username, email, fullname} = req.body;
+    username = username || req.user?.username;
+    email = email || req.user?.email;
+    fullname = fullname || req.user?.fullname;
+
+    if(username != req.user.username && await Users.findOne({username : username})){
+        throw new ApiError(409,"Username Already Taken");
+    }
+
+    if(email != req.user?.email && await Users.findOne({email : email})){
+        throw new ApiError(409,"Email Already Used");
+    }
+
+    const user = await Users.findByIdAndUpdate(req.user._id,{
+            $set : {
+                username : username,
+                email : email,
+                fullname : fullname
+            }
+        },
+        {
+            new : true
+        }
+    ).select("-password -refreshToken");
+
+    if(!user){
+        throw new ApiError(409," Database change could not take plase ");
+    }
+    res.status(200).json(new ApiResponse(204,user, "Changed SuccessFully"));
+
+});
+
+
+const updateAvatar= asyncHandler( async (req, res) => {
+
+    const uploadFilepath = req?.file?.path;
+
+    if(!uploadFilepath){
+        throw new ApiError(400, "File could not be parsed correctly or missing");
+    }
+
+    const cloudinaryFileUrl = (await uploadOnCloudinary(uploadFilepath)).url;
+
+    if(!cloudinaryFileUrl){
+        throw new ApiError(500, "File could not be Uploaded to cloudinary");
+    }
+
+    const user = await Users.findByIdAndUpdate(req.user?._id, {
+            $set: {
+                avatar: cloudinaryFileUrl
+            }
+        },
+        {
+            new : true
+        }
+    ).select("-password -refreshToken");
+    
+    if(!user){
+        throw new ApiError(500,"Database error occurred with no upload or fetch of file of File Url");
+    }
+
+    res.status(200).json(new ApiResponse(200,user,"Avatar Updated"));
+});
+
+
+const updateCoverImage= asyncHandler(
+    async (req, res) => {
+
+        const uploadFilepath = req?.file?.path;
+    
+        if(!uploadFilepath){
+            throw new ApiError(400, "File could not be parsed correctly or missing");
+        }
+    
+        const cloudinaryFileUrl = (await uploadOnCloudinary(uploadFilepath)).url;
+    
+        if(!cloudinaryFileUrl){
+            throw new ApiError(500, "File could not be Uploaded to cloudinary");
+        }
+    
+        const user = await Users.findByIdAndUpdate(req.user?._id, {
+                $set: {
+                    coverImage: cloudinaryFileUrl
+                }
+            },
+            {
+                new : true
+            }
+        ).select("-password -refreshToken");
+        
+        if(!user){
+            throw new ApiError(500,"Database error occurred with no upload or fetch of file of File Url");
+        }
+    
+        res.status(200).json(new ApiResponse(200,user,"Cover Image Updated"));
+    }
+);
+
+
+
+
+
 export { 
     registerUser,
     loginUser,
     refreshAccessToken,
-    logout
+    logout,
+    changePassword,
+    getCurrentUser,
+    updateAccountDetails,
+    updateAvatar,
+    updateCoverImage,
 };
