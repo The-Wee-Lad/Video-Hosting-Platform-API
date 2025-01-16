@@ -11,4 +11,4 @@ const subscriptionSchema = new Schema({
     }
 },{timestamps : true});
 
-const const Subscriptions = model("Subscriptions",subscriptionSchema);
+export const Subscriptions = model("Subscriptions",subscriptionSchema);

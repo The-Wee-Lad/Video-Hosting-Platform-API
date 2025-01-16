@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon ./src/index.js",
     "start": "node ./src/index.js",
-    "killdev": "taskkill /f /im node.exe"
+    "killall": "taskkill /f /im node.exe"
   },
   "author": "Aditya Narayan",
   "license": "ISC",
