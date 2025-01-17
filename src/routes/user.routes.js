@@ -7,7 +7,9 @@ import { registerUser,
         getCurrentUser, 
         updateAccountDetails,
         updateAvatar,
-        updateCoverImage} from "../controllers/user.controllers.js";
+        updateCoverImage,
+        getUserChannelInfo,
+        getWatchHistory} from "../controllers/user.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJwt } from "../middlewares/auth.middlewares.js";
 
@@ -31,10 +33,20 @@ router.route("/register").post(
 //Secured Routes
 router.route("/login").post(upload.none(),loginUser);
 router.route("/refresh-accessToken").post(refreshAccessToken);
-router.route("/logout").post(upload.none(), verifyJwt, logout)
-router.route("/change-pass").post(upload.none(), verifyJwt, changePassword)
-router.route("/getcurruser").get(verifyJwt, getCurrentUser)
-router.route("/update-acc-details").patch(upload.none(),verifyJwt, updateAccountDetails);
-router.route("/update-avatar").post(upload.single("avatar"),verifyJwt ,updateAvatar);
-router.route("/update-cover").post(upload.single("coverImage"),verifyJwt ,updateCoverImage);
+
+//verified routes only
+router.use(verifyJwt);
+router.route("/logout").post(upload.none(), logout)
+router.route("/change-pass").post(upload.none(), changePassword)
+router.route("/getcurruser").get(getCurrentUser)
+router.route("/update-acc-details").patch(upload.none(), updateAccountDetails);
+router.route("/update-avatar").post(upload.single("avatar") ,updateAvatar);
+router.route("/update-cover").post(upload.single("coverImage") ,updateCoverImage);
+router.route("/channel/:channelName").get(getUserChannelInfo);
+router.route("/watch-history").get(getWatchHistory);
+
+
 export default router;
+
+
+

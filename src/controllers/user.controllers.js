@@ -4,7 +4,9 @@ import { uploadOnCloudinary } from "../utilities/cloudinary.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import { Users } from "../models/users.models.js";
 import { cookieOptions } from "../constants.js";
+import { Subscriptions } from "../models/subscription.models.js";
 import jwt from "jsonwebtoken";
+import mongoose, { Mongoose, Schema } from "mongoose";
 
 const generateAccessAndRefreshToken = async (userid) => {
     
@@ -294,8 +296,140 @@ const updateCoverImage= asyncHandler(
     }
 );
 
+const getUserChannelInfo = asyncHandler( async(req, res) => {
 
+    const {channelName} = req.params;
+    if(!channelName?.trim()){
+        throw new ApiError(400,"Invalid Channel Name");
+    }
 
+    const channel = await  Users.aggregate([
+        {
+            $match: {
+                username : channelName.toLowerCase()
+            }
+        },
+        {
+            $lookup:{
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "channel",
+                as: "subscribers"
+            }
+        },
+        {
+            $lookup:{
+                from: "subscriptions",
+                localField: "_id",
+                foreignField: "subscriber",
+                as: "subscribed"
+            }
+        },
+        {
+            $addFields:{
+                subscribersCount: {
+                    $size: "$subscribers"
+                },
+                subscribedCount: {
+                    $size: "$subscribed"
+                },
+                isSubscribed: {
+                    $cond:{
+                        if: {  $in: [req.user?._id, "$subscribers.subscriber"]},
+                        then : true,
+                        else : false
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                username: 1,
+                fullname: 1,
+                subscribedCount: 1,
+                subscribersCount: 1,
+                // subscribed: 1,
+                // subscribers: 1,
+                isSubscribed: 1,
+                avatar: 1,
+                coverImage: 1
+            }
+        }
+    ]);
+
+    console.log(channel);
+    
+    if(!channel?.length){
+        throw new ApiError(404,"Channel does not exist");
+    }
+
+    res.status(200).json(new ApiResponse(200, channel[0], "User Channel fetched successfully"));
+})
+
+const getWatchHistory = asyncHandler( async (req, res) => {
+    
+    const user = await Users.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(req.usr?._id)
+            }
+        },
+        {
+            $lookup: {
+                from: "videos",
+                localField: "watchHistory",
+                foreignField: "_id",
+                as: "watchHistory",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "owner",
+                            foreignField: "_id",
+                            as: "owner",
+                            pipeline: [
+                                {
+                                    $project: {
+                                        fullname: 1,
+                                        usename: 1,
+                                    }
+                                }
+                            ]
+                            
+                        }
+                    },
+                ],
+                pipeline:[
+                    {
+                        $addFields: {
+                            "owner": {
+                                $first: "$owner"
+                            }
+                        }
+                    }   
+                ]
+            }
+        }
+    ]);
+
+    const watchHistory = user[0].watchHistory;
+    res.status(200).json(new ApiResponse(200, watchHistory, "Watch History Fetched Successfully"));
+});
+
+const toogleSubscriptionPrivacy = asyncHandler( async (req, res) => {
+    
+    const user = await Users.findById(req.user?._id);
+    if(!user){
+        throw new ApiError(500,"couldn't fetch the user")
+    }
+    user.privateSubscription = user.privateSubscription ^ true;
+    const newStatus = user.privateSubscription;
+    await user.save()
+
+    res
+    .status(200)
+    .json(new ApiResponse(200, {"newSubscriptionPrivacyStatus" : newStatus}, "Toggled the privateSubscription status"));
+})
 
 
 export { 
@@ -308,4 +442,45 @@ export {
     updateAccountDetails,
     updateAvatar,
     updateCoverImage,
+    getUserChannelInfo,
+    getWatchHistory,
+    toogleSubscriptionPrivacy,
 };
+
+/*
+TODO 
+
+Models : like, comments, playlist, tweet(maybe)
+
+Controllers and Routes : comment, dashboard, healthcheckm like,playlist,subscription, tweet
+
+    get all videos based on query {page, batchsize, query, sortby, sortType, userId}
+    publish a video 
+    getvideosbyId
+    get videoById
+    updateVideo
+    togglepublishstatus
+    deletevideo
+
+    getVideoCooments,add,update,delete.
+
+    health check to see if server is ok
+
+    get all liked videos
+    toggole video like
+    toggle comment like
+    toggle tweet like
+    get liked videos
+
+    getplaylist,getuserplaylist, getplaylistby id
+    , addvideotoplaylist, removevideofromplaylist,
+    update playlist
+
+    toggleSubscription,
+    getUserChannelSubscribers,
+    getSubscribedChannels
+
+    create tweet , get user tweet, update tweets, delete tweets
+
+
+*/
