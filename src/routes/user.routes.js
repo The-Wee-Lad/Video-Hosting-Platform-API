@@ -9,7 +9,9 @@ import { registerUser,
         updateAvatar,
         updateCoverImage,
         getUserChannelInfo,
-        getWatchHistory} from "../controllers/user.controllers.js";
+        getWatchHistory,
+        removeCoverImage,
+        removeAvatar} from "../controllers/user.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJwt } from "../middlewares/auth.middlewares.js";
 
@@ -42,6 +44,8 @@ router.route("/getcurruser").get(getCurrentUser)
 router.route("/update-acc-details").patch(upload.none(), updateAccountDetails);
 router.route("/update-avatar").post(upload.single("avatar") ,updateAvatar);
 router.route("/update-cover").post(upload.single("coverImage") ,updateCoverImage);
+router.route("/remove-cover").post(removeCoverImage);
+router.route("/remove-avtar").post(removeAvatar);
 router.route("/channel/:channelName").get(getUserChannelInfo);
 router.route("/watch-history").get(getWatchHistory);
 
