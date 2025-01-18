@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { verifyJwt } from "../middlewares/auth.middlewares";
-import { getSubscribedChannels, getUserChannelSubscribers, toggleSubscription } from "../controllers/subscription.controllers";
-const subsRouter = Router();
+import { verifyJwt } from "../middlewares/auth.middlewares.js";
+import { getSubscribedChannels, getUserChannelSubscribers, toggleSubscription } from "../controllers/subscription.controllers.js";
+const router = Router();
 
-subsRouter.use(verifyJwt);
-subsRouter.route("/c/:channel").post(toggleSubscription).get(getSubscribedChannels);
-subsRouter.route("/my-subscribers").get(getUserChannelSubscribers);
+router.use(verifyJwt);
+router.route("/c/:channel").post(toggleSubscription).get(getSubscribedChannels);
+router.route("/my-subscribers").get(getUserChannelSubscribers);
 
-export { subsRouter }
+export default router;
