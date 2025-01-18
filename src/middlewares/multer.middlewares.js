@@ -1,4 +1,5 @@
 import multer from "multer";
+import path from "path";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -13,4 +14,18 @@ const upload = multer({
     storage,
 });
 
-export { upload };
+const uploadVideos = multer({
+    storage,
+    fileFilter: function(req, file, callback){
+        let ext = path.extname(file.originalname);
+        if(! ['.mp4', '.mov', '.mpeg4', '.avi', '.gif'].includes(ext)){
+            callback(new ApiError(400,"Nothing But Videos are allowed"));
+        }
+        callback(null, true);
+    },
+    limits: {
+        fileSize: 1024*1024
+    }
+});
+
+export { upload, uploadVideos };
