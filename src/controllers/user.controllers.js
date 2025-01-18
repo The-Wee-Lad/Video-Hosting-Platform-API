@@ -438,6 +438,39 @@ const toogleSubscriptionPrivacy = asyncHandler( async (req, res) => {
     .json(new ApiResponse(200, {"newSubscriptionPrivacyStatus" : newStatus}, "Toggled the privateSubscription status"));
 })
 
+const removeCoverImage = asyncHandler( async (req, res) => {
+
+    const user = await Users.findByIdAndUpdate(req.user?._id, {
+        $set : {
+            coverImage : null
+        }
+    }).select("-password -refreshToken");
+
+    if(!user){
+        throw new ApiError(500," Failed to Remove CoverImage from database");
+    }
+
+    await deleteOnCloudinary(extractPublicId(req.user?.coverImage));
+
+    res.status(200).json(new ApiResponse(200,user,"Cover Image Removed"));    
+});
+
+const removeAvatar = asyncHandler( async (req, res) => {
+
+    const user = await Users.findByIdAndUpdate(req.user?._id, {
+        $set : {
+            avatar : null
+        }
+    }).select("-password -refreshToken");
+
+    if(!user){
+        throw new ApiError(500," Failed to Remove Avatar from database");
+    }
+
+    await deleteOnCloudinary(extractPublicId(req.user?.avatar));
+
+    res.status(200).json(new ApiResponse(200,user,"Avatar Image Removed"));    
+});
 
 export { 
     registerUser,
@@ -452,6 +485,8 @@ export {
     getUserChannelInfo,
     getWatchHistory,
     toogleSubscriptionPrivacy,
+    removeCoverImage,
+    removeAvatar
 };
 
 /*
