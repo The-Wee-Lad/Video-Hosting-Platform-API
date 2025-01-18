@@ -1,6 +1,9 @@
 import { asyncHandler } from "../utilities/asyncHandler.js";
 import { ApiError } from "../utilities/ApiError.js";
-import { uploadOnCloudinary } from "../utilities/cloudinary.js";
+import { uploadOnCloudinary,
+        deleteOnCloudinary,
+        extractPublicId,
+} from "../utilities/cloudinary.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
 import { Users } from "../models/users.models.js";
 import { cookieOptions } from "../constants.js";
@@ -40,7 +43,7 @@ const registerUser = asyncHandler( async (req, res) => {
     if(await Users.findOne({$or : [{username : username}, {email : email}]})){
         throw new ApiError(409,"User Already exists");
     }
-    
+
     const avatarLocalPath = req.files?.avatar?.[0]?.path;
     const coverLocalPath = req.files?.coverImage?.[0]?.path;
 
@@ -259,6 +262,8 @@ const updateAvatar= asyncHandler( async (req, res) => {
         throw new ApiError(500,"Database error occurred with no upload or fetch of file of File Url");
     }
 
+    await deleteOnCloudinary(extractPublicId(req.user?.avatar))
+
     res.status(200).json(new ApiResponse(200,user,"Avatar Updated"));
 });
 
@@ -292,6 +297,8 @@ const updateCoverImage= asyncHandler(
             throw new ApiError(500,"Database error occurred with no upload or fetch of file of File Url");
         }
     
+        await deleteOnCloudinary(extractPublicId(req.user?.coverImage));
+
         res.status(200).json(new ApiResponse(200,user,"Cover Image Updated"));
     }
 );
