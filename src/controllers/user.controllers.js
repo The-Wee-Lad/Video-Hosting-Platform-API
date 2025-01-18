@@ -144,7 +144,6 @@ const refreshAccessToken = asyncHandler( async (req, res) => {
 const logout = asyncHandler( async (req, res) => {
 
     const user = await Users.findByIdAndUpdate(req.user._id, {$set: {refreshToken: null}}, {new: true});
-    console.log(user);
     
     if(!user || user.refreshToken){
         throw new ApiError(500,"could not change database");  
@@ -472,6 +471,21 @@ const removeAvatar = asyncHandler( async (req, res) => {
     res.status(200).json(new ApiResponse(200,user,"Avatar Image Removed"));    
 });
 
+const removeUser = asyncHandler( async (req, res) => {
+    
+    const response = await Users.findByIdAndDelete(req.user._id);
+    
+    if(!response){
+        throw new ApiError(500,"could not change database");  
+    }
+    
+    res
+    .status(200)
+    .clearCookie("refreshToken",cookieOptions)
+    .clearCookie("accessToken",cookieOptions)
+    .json(new ApiResponse(200,response,"User Removed"));
+})
+
 export { 
     registerUser,
     loginUser,
@@ -486,7 +500,8 @@ export {
     getWatchHistory,
     toogleSubscriptionPrivacy,
     removeCoverImage,
-    removeAvatar
+    removeAvatar,
+    removeUser,
 };
 
 /*
@@ -494,15 +509,9 @@ TODO
 
 Models : like, comments, playlist, tweet(maybe)
 
-Controllers and Routes : comment, dashboard, healthcheckm like,playlist,subscription, tweet
+Controllers and Routes : comment, dashboard, like,playlist, tweet
 
     get all videos based on query {page, batchsize, query, sortby, sortType, userId}
-    publish a video 
-    getvideosbyId
-    get videoById
-    updateVideo
-    togglepublishstatus
-    deletevideo
 
     getVideoCooments,add,update,delete.
 
@@ -517,10 +526,6 @@ Controllers and Routes : comment, dashboard, healthcheckm like,playlist,subscrip
     getplaylist,getuserplaylist, getplaylistby id
     , addvideotoplaylist, removevideofromplaylist,
     update playlist
-
-    toggleSubscription,
-    getUserChannelSubscribers,
-    getSubscribedChannels
 
     create tweet , get user tweet, update tweets, delete tweets
 

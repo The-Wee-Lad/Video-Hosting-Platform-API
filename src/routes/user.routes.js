@@ -11,7 +11,8 @@ import { registerUser,
         getUserChannelInfo,
         getWatchHistory,
         removeCoverImage,
-        removeAvatar} from "../controllers/user.controllers.js";
+        removeAvatar,
+        removeUser} from "../controllers/user.controllers.js";
 import { upload } from "../middlewares/multer.middlewares.js";
 import { verifyJwt } from "../middlewares/auth.middlewares.js";
 
@@ -38,8 +39,9 @@ router.route("/refresh-accessToken").post(refreshAccessToken);
 
 //verified routes only
 router.use(verifyJwt);
-router.route("/logout").post(upload.none(), logout)
-router.route("/change-pass").post(upload.none(), changePassword)
+router.route("/logout").post(upload.none(), logout);
+router.route("/remove-user").post(removeUser);
+router.route("/change-pass").post(upload.none(), changePassword);
 router.route("/getcurruser").get(getCurrentUser)
 router.route("/update-acc-details").patch(upload.none(), updateAccountDetails);
 router.route("/update-avatar").post(upload.single("avatar") ,updateAvatar);
