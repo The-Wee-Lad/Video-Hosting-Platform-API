@@ -15,8 +15,13 @@ app.use(express.static('../public'));
 app.use(cookieParser());
 
 import  userRouter from "./routes/user.routes.js";
-import { subsRouter } from "./routes/subscription.routes.js";
+import subsRouter from "./routes/subscription.routes.js";
+import healthRouter from "./routes/healthcheck.routes.js";
+import vidsRouter from "./routes/video.routes.js";
 app.use("/user",userRouter);
 app.use("/subs",subsRouter)
+app.use("/vid",vidsRouter);
+app.use("/healthcheck",healthRouter);
+
 
 export { app };
