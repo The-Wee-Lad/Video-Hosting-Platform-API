@@ -18,10 +18,12 @@ import  userRouter from "./routes/user.routes.js";
 import subsRouter from "./routes/subscription.routes.js";
 import healthRouter from "./routes/healthcheck.routes.js";
 import vidsRouter from "./routes/video.routes.js";
+import commentRouter from "./routes/comment.routes.js"
 app.use("/user",userRouter);
 app.use("/subs",subsRouter)
 app.use("/vid",vidsRouter);
 app.use("/healthcheck",healthRouter);
+app.use("/comment",commentRouter)
 
 
 export { app };

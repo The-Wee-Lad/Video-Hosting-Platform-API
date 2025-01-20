@@ -1,8 +1,8 @@
 import { asyncHandler } from "../utilities/asyncHandler.js"
 import { ApiError } from "../utilities/ApiError.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
-import { Users } from "../models/users.models.js";
-import { Subscriptions } from "../models/subscription.models.js";
+import { Users } from "../models/users.model.js";
+import { Subscriptions } from "../models/subscriptions.model.js";
 import mongoose from "mongoose";
 
 const toggleSubscription = asyncHandler( async (req, res) => {
@@ -98,7 +98,7 @@ const getSubscribedChannels = asyncHandler( async (req, res) => {
     }
 
     if(channelDoc?._id != req.user?._id && channelDoc?.privateSubscription){
-        throw new ApiError(401, "Channels Subscriptions List is Private for this channel");
+        throw new ApiError(401, "Channels Subscriptions List is Private for this User");
     }
     
     const user = await Users.aggregate([

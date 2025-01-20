@@ -5,9 +5,8 @@ import { uploadOnCloudinary,
         extractPublicId,
 } from "../utilities/cloudinary.js";
 import { ApiResponse } from "../utilities/ApiResponse.js";
-import { Users } from "../models/users.models.js";
+import { Users } from "../models/users.model.js";
 import { cookieOptions } from "../constants.js";
-import { Subscriptions } from "../models/subscription.models.js";
 import jwt from "jsonwebtoken";
 import mongoose, { Mongoose, Schema } from "mongoose";
 
@@ -373,7 +372,6 @@ const getUserChannelInfo = asyncHandler( async(req, res) => {
 })
 
 const getWatchHistory = asyncHandler( async (req, res) => {
-    
     const user = await Users.aggregate([
         {
             $match: {
@@ -510,18 +508,6 @@ TODO
 Models : like, comments, playlist, tweet(maybe)
 
 Controllers and Routes : comment, dashboard, like,playlist, tweet
-
-    get all videos based on query {page, batchsize, query, sortby, sortType, userId}
-
-    getVideoCooments,add,update,delete.
-
-    health check to see if server is ok
-
-    get all liked videos
-    toggole video like
-    toggle comment like
-    toggle tweet like
-    get liked videos
 
     getplaylist,getuserplaylist, getplaylistby id
     , addvideotoplaylist, removevideofromplaylist,

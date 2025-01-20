@@ -1,12 +1,13 @@
-import { Videos } from "../models/videos.models.js";
-import { Users } from "../models/users.models.js";
+import { Videos } from "../models/videos.model.js";
+import { Users } from "../models/users.model.js";
 import { asyncHandler } from "../utilities/asyncHandler.js";
 import { ApiError } from "../utilities/ApiError.js"
 import { uploadOnCloudinary } from "../utilities/cloudinary.js"
 import { ApiResponse } from "../utilities/ApiResponse.js";
+import { isValidObjectId } from "mongoose";
 
 const publishVid = asyncHandler( async (req, res) => {
-    const { title, description, publish = true} = req.body;
+    const { title, description, publish = true, comments = true} = req.body;
     if(!title || !description){
         throw new ApiError(400," Title and Desvription Both are required ");
     }
@@ -37,6 +38,7 @@ const publishVid = asyncHandler( async (req, res) => {
         duration: videoDuration,
         views: 0,
         isPublished: publish,
+        commentsEnabled: comments,
         owner: req.user?._id 
     });
 
@@ -47,11 +49,11 @@ const publishVid = asyncHandler( async (req, res) => {
     res.status(200).json(new ApiResponse(200, video, "Video uploaded successfully."))
 }); 
 
-const tooglePublish = asyncHandler( async (req, res) => {
+const togglePublish = asyncHandler( async (req, res) => {
     const videoId = req.params;
 
-    if(!videoId){
-        throw new ApiError(400,"Strange How is this Even Possible?");
+    if(!isValidObjectId(videoId)){
+        throw new ApiError(400,"Invalid Id");
     }
 
     const video = await Videos.findById(videoId);
@@ -77,11 +79,41 @@ const tooglePublish = asyncHandler( async (req, res) => {
     .json(new ApiResponse(200, newVideo, "Video Publish status changed to "+newVideo.isPublished));
 });
 
+const toggleComments = asyncHandler( async (req, res) => {
+    const videoId = req.params;
+
+    if(!isValidObjectId(videoId)){
+        throw new ApiError(400,"Invalid Id");
+    }
+
+    const video = await Videos.findById(videoId);
+
+    if(!video){
+        throw new ApiError(404,"No Such Video Exists");
+    }
+
+    if(video.owner != req.user?._id){
+        throw new ApiError(401,"Unauthorised Access");
+    }
+
+    const newVideo = await Videos.findByIdAndUpdate(video.videoFile, [
+        {
+            $set:{
+                commentsEnabled: {$not : "$commentsEnabled"}
+            }
+        }
+    ]);
+
+    res
+    .status(200)
+    .json(new ApiResponse(200, newVideo, "Video Comments status changed to "+newVideo.commentsEnabled));
+});
+
 const getVideoById = asyncHandler( async (req, res) => {
     const videoId = req.params;
 
-    if(!videoId){
-        throw new ApiError(400,"Strange How is this Even Possible?");
+    if(!isValidObjectId(videoId)){
+        throw new ApiError(400,"Invalid Id");
     }
     const video = await Videos.findById(videoId);
 
@@ -102,8 +134,8 @@ const updateVideo = asyncHandler( async (req, res) => {
     const videoId = req.params;
     const { title, description, published} = req.body;
 
-    if(!videoId){
-        throw new ApiError(400,"Strange How is this Even Possible?");
+    if(!isValidObjectId(videoId)){
+        throw new ApiError(400,"Invalid Id");
     }
 
     const video = await Videos.findById(videoId);
@@ -128,8 +160,8 @@ const updateVideo = asyncHandler( async (req, res) => {
 const deleteVideo = asyncHandler( async (req, res) => {
     const videoId = req.params;
 
-    if(!videoId){
-        throw new ApiError(400,"Strange How is this Even Possible?");
+    if(!isValidObjectId(videoId)){
+        throw new ApiError(400,"Invalid Id");
     }
     const video = await Videos.findById(videoId);
 
@@ -165,7 +197,12 @@ const getAllVideos = asyncHandler(async (req, res) => {
     const queryFilter = {};
     
     if(userId){
+        if(userId != req.user?._id)
+            queryFilter.isPublished = true;
         queryFilter.userId  = userId;
+        if(!isValidObjectId(userId)){
+            throw new ApiError(400,"Invalid Id");
+        }
         if(!(await Users.findById(userId))){
             throw new ApiError(400," Userid not Found");      
         }
@@ -201,6 +238,15 @@ const getAllVideos = asyncHandler(async (req, res) => {
         throw new ApiError(500," No Query result from MongoDB");
     }
 
+    res.status(200).json(200,queryResult,"Fetch all videos based on query");
 });
 
-export { publishVid, tooglePublish, getVideoById, updateVideo, deleteVideo, getAllVideos}
+export { 
+    publishVid, 
+    togglePublish, 
+    getVideoById, 
+    updateVideo, 
+    deleteVideo, 
+    getAllVideos, 
+    toggleComments
+}

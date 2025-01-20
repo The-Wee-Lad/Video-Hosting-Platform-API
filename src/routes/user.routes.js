@@ -12,12 +12,11 @@ import { registerUser,
         getWatchHistory,
         removeCoverImage,
         removeAvatar,
-        removeUser} from "../controllers/user.controllers.js";
-import { upload } from "../middlewares/multer.middlewares.js";
-import { verifyJwt } from "../middlewares/auth.middlewares.js";
+        removeUser} from "../controllers/user.controller.js"
+import { upload } from "../middlewares/multer.middleware.js";
+import { verifyJwt } from "../middlewares/auth.middleware.js";
 
 const  router  = Router({mergeParams : true});
-
 
 router.route("/register").post(
     upload.fields([

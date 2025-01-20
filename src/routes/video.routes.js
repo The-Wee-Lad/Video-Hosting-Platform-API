@@ -1,7 +1,14 @@
 import { Router } from "express";
-import { verifyJwt } from "../middlewares/auth.middlewares.js";
-import { upload, uploadVideos} from "../middlewares/multer.middlewares.js"
-import { publishVid, tooglePublish, getAllVideos, getVideoById, deleteVideo, updateVideo } from "../controllers/video.controllers.js";
+import { verifyJwt } from "../middlewares/auth.middleware.js";
+import { upload, uploadVideos} from "../middlewares/multer.middleware.js"
+import { publishVid,
+        togglePublish,
+        getAllVideos,
+        getVideoById,
+        deleteVideo,
+        updateVideo,
+        toggleComments
+    } from "../controllers/video.controllers.js";
 
 const router = Router();
 
@@ -22,9 +29,12 @@ router.route("/")
 router.route("/:videoId")
 .get(getVideoById)
 .patch(updateVideo)
-.delete(deleteVideo)
+.delete(deleteVideo);
 
 router.route("/toggle-publish/:videoId")
-.post(tooglePublish)
+.post(togglePublish);
+
+router.route("/toggle-comments/:videoId")
+.post(toggleComments);
 
 export default router;

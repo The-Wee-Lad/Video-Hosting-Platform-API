@@ -33,6 +33,10 @@ const videoSchema = new Schema({
     owner : {
         type : Schema.Types.ObjectId,
         ref : "Users"
+    },
+    commentsEnabled: {
+        type: Boolean,
+        default: true
     }
 },
 {timestamp : true});
