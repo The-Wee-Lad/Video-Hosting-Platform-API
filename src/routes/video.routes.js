@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { verifyJwt } from "../middlewares/auth.middlewares.js";
 import { upload, uploadVideos} from "../middlewares/multer.middlewares.js"
-import { publishVid, tooglePublish } from "../controllers/video.controllers.js";
+import { publishVid, tooglePublish, getAllVideos, getVideoById, deleteVideo, updateVideo } from "../controllers/video.controllers.js";
 
 const router = Router();
 
@@ -12,19 +12,17 @@ router.route("/")
     {
         name: "videoFile",
         max:1,
-    }
-]),
-upload.fields([
+    }]),upload.fields([
     {
         name: "thumbnail",
         max:1 
-    }
-]),
-publishVid
-);  
+    }]), publishVid)
+.get(getAllVideos);  
 
 router.route("/:videoId")
-.get()
+.get(getVideoById)
+.patch(updateVideo)
+.delete(deleteVideo)
 
 router.route("/toggle-publish/:videoId")
 .post(tooglePublish)

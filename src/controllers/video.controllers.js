@@ -1,4 +1,5 @@
 import { Videos } from "../models/videos.models.js";
+import { Users } from "../models/users.models.js";
 import { asyncHandler } from "../utilities/asyncHandler.js";
 import { ApiError } from "../utilities/ApiError.js"
 import { uploadOnCloudinary } from "../utilities/cloudinary.js"
@@ -151,8 +152,55 @@ const deleteVideo = asyncHandler( async (req, res) => {
 });
 
 const getAllVideos = asyncHandler(async (req, res) => {
-    const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
-    //TODO: get all videos based on query, sort, pagination
-})
+    const { page = 1,
+            limit = 10,
+            query = "",
+            sortBy = ["views", "createdAt", "duration"],
+            sortType = [-1,-1,-1],
+            userId
+            } = req.query;
 
-export { publishVid, tooglePublish, getVideoById, updateVideo, deleteVideo}
+    //deafult is relevance here. I am just putting one more sortCategory forwarded by frontend under it.
+    const sortByCategories = ["createdAt", "duration", "views"];
+    const queryFilter = {};
+    
+    if(userId){
+        queryFilter.userId  = userId;
+        if(!(await Users.findById(userId))){
+            throw new ApiError(400," Userid not Found");      
+        }
+    }
+    
+    query = query?.trim();
+    queryFilter["$text"] = {
+        "$search" : query
+    };
+    
+    const sortFilter = {"score" : {$meta : "textScore"}};
+    if(sortBy){
+        for (const [index,elem] of sortBy.entries())
+        {
+            if(!Object.keys(sortByCategories).includes(elem)){
+                throw new ApiError(400,"sortBy array includes Invalid Sorting By Category Type");
+            }
+            sortFilter[elem] = sortType[index];
+        }
+    }
+    
+    page = page < 1 ? 0 :page-1;
+    const skip = page*limit;
+    
+    const queryResult = await Videos.aggregate([
+        {$match : queryFilter},
+        {$addFields : {"score" : {$meta : "textScore"}}},
+        {$count: "totalCount"},
+        {$sort: sortFilter}
+    ]).skip(skip).limit(limit);
+
+    if(typeof queryResult === undefined){
+        throw new ApiError(500," No Query result from MongoDB");
+    }
+
+});
+
+export { publishVid, tooglePublish, getVideoById, updateVideo, deleteVideo, getAllVideos}
