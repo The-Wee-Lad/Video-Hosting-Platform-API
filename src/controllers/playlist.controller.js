@@ -7,7 +7,12 @@ import { Videos } from "../models/videos.model.js"
 
 
 const createPlaylist = asyncHandler(async (req, res) => {
-    const {name, description, isPublic} = req.body;
+    const {name, description, isPublic = true} = req.body;
+
+    if(isPublic === "true")
+        isPublic = true;
+    if(isPublic === "false")
+        isPublic = false;
 
     if(!name || ! description){
         throw new ApiError(400,"All feilds Required");
@@ -26,7 +31,17 @@ const createPlaylist = asyncHandler(async (req, res) => {
 
 const getUserPlaylists = asyncHandler(async (req, res) => {
     const {userId} = req.params
-    
+    if(!isValidObjectId(userId)){
+        throw new ApiError(400,"Invalid Id");
+    }
+
+    const playlist = "";
+
+    if(!playlist){
+        throw new ApiError("No user public Playlist Found!");
+    }
+
+    res.status(200).json(new ApiResponse(200, playlist,"PlayList Returned"));
 })
 
 const getPlaylistById = asyncHandler(async (req, res) => {
@@ -109,7 +124,7 @@ const getPlaylistById = asyncHandler(async (req, res) => {
         throw new ApiError("No Playlist Found!");
     }
 
-    res.status(200).json(new ApiResponse(200, playlist,"This is the video hosting website"));
+    res.status(200).json(new ApiResponse(200, playlist,"Playlist returned"));
 })
 
 
@@ -118,7 +133,7 @@ const deletePlaylist = asyncHandler(async (req, res) => {
     if(!isValidObjectId(playlistId)){
         throw new ApiError(400,"Invalid Id");
     }
-    let deletedPlaylist = await Playlists.findById(playlistId);
+    let deletedPlaylist = await Playlists.findOneAndDelete({_id:playlistId, owner: req.user?._id});
     if(!deletedPlaylist){
         throw new ApiError(400,"No Such Playlist Found");
     }
@@ -127,17 +142,24 @@ const deletePlaylist = asyncHandler(async (req, res) => {
 
 const updatePlaylist = asyncHandler(async (req, res) => {
     const {playlistId} = req.params
-    const {name, description} = req.body
+    const {name, description, isPublic} = req.body
     if(!isValidObjectId(playlistId)){
         throw new ApiError(400,"Invalid Id");
     }
     if(!name || !description){
         throw new ApiError(400, "All fields are required");
     }
-    const newPlayList = Playlists.findByIdAndUpdate(playlistId,{
+
+    if(isPublic === "true")
+        isPublic = true;
+    if(isPublic === "false")
+        isPublic = false;
+    
+    const newPlayList = Playlists.findOneAndUpdate({_id:playlistId, owner: req.user?._id},{
         $set:{
             name : name,
             description: description,
+            isPublic: isPublic
         }
     });
     if(!newPlayList){
@@ -159,7 +181,7 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
     }
 
     const video = await Videos.findById(videoId);
-    const playlist = await Playlists.findById(playlistId);
+    const playlist = await Playlists.findOne({"_id":playlistId, owner: req.user?._id});
     if(!video){
         throw new ApiError(400, "Video Not Found!!")
     }
@@ -184,7 +206,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
     }
 
     const video = await Videos.findById(videoId);
-    const playlist = await Playlists.findById(playlistId);
+    const playlist = await Playlists.findOne({_id:playlistId, owner: req.user?._id});
     if(!video){
         throw new ApiError(400, "Video Not Found!!")
     }
@@ -215,3 +237,4 @@ export {
     deletePlaylist,
     updatePlaylist
 }
+

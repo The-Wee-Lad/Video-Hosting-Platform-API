@@ -9,6 +9,11 @@ import { Users } from "../models/users.model.js";
 import { cookieOptions } from "../constants.js";
 import jwt from "jsonwebtoken";
 import mongoose, { Mongoose, Schema } from "mongoose";
+import {Videos} from "../models/videos.model.js"
+import { Comments } from "../models/comments.model.js";
+import { Likes } from "../models/likes.model.js";
+import { Playlists } from "../models/playlist.model.js";
+import { Subscriptions } from "../models/subscriptions.model.js";
 
 const generateAccessAndRefreshToken = async (userid) => {
     
@@ -47,9 +52,9 @@ const registerUser = asyncHandler( async (req, res) => {
     const coverLocalPath = req.files?.coverImage?.[0]?.path;
 
     //Checking if avatar image is included or not
-    if(!avatarLocalPath){
-        throw new ApiError(400,"Avatar image required");
-    }
+    // if(!avatarLocalPath){
+    //     throw new ApiError(400,"Avatar image required");
+    // }
 
     const avatarResponse = await uploadOnCloudinary(avatarLocalPath);
     const coverImageResponse = await uploadOnCloudinary(coverLocalPath);
@@ -420,7 +425,7 @@ const getWatchHistory = asyncHandler( async (req, res) => {
     res.status(200).json(new ApiResponse(200, watchHistory, "Watch History Fetched Successfully"));
 });
 
-const toogleSubscriptionPrivacy = asyncHandler( async (req, res) => {
+const toggleSubscriptionPrivacy = asyncHandler( async (req, res) => {
     
     const user = await Users.findById(req.user?._id);
     if(!user){
@@ -471,12 +476,34 @@ const removeAvatar = asyncHandler( async (req, res) => {
 
 const removeUser = asyncHandler( async (req, res) => {
     
+    const {usernameOrEmail : userid, password} = req.body;
+    
+    if([userid, password].some((elem) => {
+        return !(elem?.trim()) || !elem})){
+        throw new ApiError(400, "All feilds are required");
+    }
+    if(userid != req.user?._id){
+        throw new ApiError(401, "Invalid Credentials");
+    }
+    
+    let user =await Users.findOne({$or : [{username: userid}, {email: userid}]});
+    
+    if(!(await user.isPasswordCorrect(password))){
+        throw new ApiError(401," Invalid Credentials ");
+    }
+    
     const response = await Users.findByIdAndDelete(req.user._id);
     
     if(!response){
         throw new ApiError(500,"could not change database");  
     }
     
+    await Videos.deleteMany({owner: req.user?._id});
+    await Comments.deleteMany({owner: req.user?._id});
+    await Likes.deleteMany({likedBy: req.user?._id});
+    await Playlists.deleteMany({owner : req.user?._id});
+    await Subscriptions.deleteMany({$or: [{subscriber: req.user._id}, {channel: req.user._id}]});
+
     res
     .status(200)
     .clearCookie("refreshToken",cookieOptions)
@@ -496,7 +523,7 @@ export {
     updateCoverImage,
     getUserChannelInfo,
     getWatchHistory,
-    toogleSubscriptionPrivacy,
+    toggleSubscriptionPrivacy,
     removeCoverImage,
     removeAvatar,
     removeUser,

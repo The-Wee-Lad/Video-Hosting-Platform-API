@@ -11,7 +11,8 @@ const publishVid = asyncHandler( async (req, res) => {
     if(!title || !description){
         throw new ApiError(400," Title and Desvription Both are required ");
     }
-
+    publish = (publish === "true")?true:false;
+    comments = (comments === "true")?true:false;
     const videoPath = req?.files?.video[0].path ,
             thumbnailPath =  req?.files?.thumbnail[0].path;
     
@@ -159,6 +160,11 @@ const updateVideo = asyncHandler( async (req, res) => {
 
     const videoId = req.params;
     const { title, description, published} = req.body;
+
+    if(published === "true")
+        published = true;
+    if(published==="false")
+        published = false;
 
     if(!isValidObjectId(videoId)){
         throw new ApiError(400,"Invalid Id");

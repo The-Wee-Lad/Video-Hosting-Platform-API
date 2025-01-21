@@ -12,7 +12,8 @@ import { registerUser,
         getWatchHistory,
         removeCoverImage,
         removeAvatar,
-        removeUser} from "../controllers/user.controller.js"
+        removeUser,
+    toggleSubscriptionPrivacy} from "../controllers/user.controller.js"
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJwt } from "../middlewares/auth.middleware.js";
 
@@ -39,7 +40,7 @@ router.route("/refresh-accessToken").post(refreshAccessToken);
 //verified routes only
 router.use(verifyJwt);
 router.route("/logout").post(upload.none(), logout);
-router.route("/remove-user").post(removeUser);
+router.route("/remove-user").post(upload.none(),removeUser);
 router.route("/change-pass").post(upload.none(), changePassword);
 router.route("/getcurruser").get(getCurrentUser)
 router.route("/update-acc-details").patch(upload.none(), updateAccountDetails);
@@ -49,6 +50,7 @@ router.route("/remove-cover").post(removeCoverImage);
 router.route("/remove-avtar").post(removeAvatar);
 router.route("/channel/:channelName").get(getUserChannelInfo);
 router.route("/watch-history").get(getWatchHistory);
+router.route("/toggleSubsPrivacy").post(toggleSubscriptionPrivacy);
 
 
 export default router;

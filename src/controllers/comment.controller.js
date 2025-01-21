@@ -42,7 +42,7 @@ const deleteComment = asyncHandler(async (req, res) => {
     if(!isValidObjectId(commentId)){
         throw new ApiError(400,"Invalid Id");
     }
-    const deletedComment = await Comments.findByIdAndDelete(commentId);
+    const deletedComment = await Comments.findOneAndDelete({_id:commentId, owner:req.user?._id});
     if(!deletedComment){
         throw new ApiError(400,"Could not delete comment : Comment Not Found");
     }
@@ -61,7 +61,7 @@ const updateComment = asyncHandler( async (req, res) => {
         throw new ApiError(400,"No Content to update");
     }
 
-    const updatedComment = Comments.findByIdAndUpdate(commentId,{$set: {content: content}});
+    const updatedComment = Comments.findOneAndUpdate({_id:commentId, owner:req.user?._id},{$set: {content: content}});
 
     if(!updatedComment){
         throw new ApiError(400,"Failed To Update the comment : Comment Not Found");

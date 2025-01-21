@@ -1,0 +1,13 @@
+PORT=8000
+MONGODB_URI=Your Mongo url
+CORS_ORIGIN=*
+ACCESS_TOKEN_SECRET= use s rendom string generators
+ACCESS_TOKEN_EXPIRY="1h"
+REFRESH_TOKEN_SECRET=a refresh Token secret
+REFRESH_TOKEN_EXPIRY="1d"
+
+//I used cloudinary for hosting user profile pics, coverImage, and videos themselves.
+CLOUDINARY_CLOUD_NAME=clodinary cloud name
+CLOUDINARY_API_KEY=its api key
+CLOUDINARY_API_SECRET=its secret
+CLOUDINARY_URL=not really needed

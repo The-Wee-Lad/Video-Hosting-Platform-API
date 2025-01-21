@@ -26,9 +26,10 @@ router.route("/")
     }]), publishVid)
 .get(getAllVideos);  
 
+
 router.route("/:videoId")
 .get(getVideoById)
-.patch(updateVideo)
+.patch(upload.none(),updateVideo)
 .delete(deleteVideo);
 
 router.route("/toggle-publish/:videoId")
