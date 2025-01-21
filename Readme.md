@@ -8,24 +8,30 @@ This repository contains the backend code for a video hosting platform. It provi
 ## Features
 
 - **User Management**
-  - User registration and authentication (email/password, OAuth).
-  - User profiles with roles (e.g., admin, viewer, uploader).
+  - User registration and authentication (email/password)
+  -login, logout, remove user,
+
+- **Subscrition**
+  -Users can subscribe other users
 
 - **Video Management**
   - Upload, update, and delete videos.
-  - Stream videos to clients using adaptive bitrate streaming.
-  - Support for video metadata (e.g., title, description, tags).
+  - Support for video metadata (e.g., title, description).
 
-- **Search and Recommendations**
-  - Search videos by title, tags, or description.
-  - Personalized video recommendations based on user activity.
+- **Comments and Likes**
+  - user can comment and like a Video
 
-- **Analytics and Insights**
-  - Track views, likes, and other interactions.
-  - Generate usage reports for users and admins.
+- **Search**
+  - Search videos by title or description
+  - sort searches by duration, views, date
 
-- **Content Moderation**
-  - Admin tools for flagging and reviewing inappropriate content.
+- **Playlist**
+  - playlist of videos can be made
+
+- **Privacy**
+  - a video can have comments on off options
+  - a video can be public, private
+  - subscription list and can be made private
 
 ---
 
@@ -44,16 +50,16 @@ This repository contains the backend code for a video hosting platform. It provi
 ### Prerequisites
 
 1. **Node.js** (v16.x or higher).
-2. **PostgreSQL** (v13 or higher).
-3. **MongoDB** (optional for metadata).
-4. **FFmpeg** installed on the server.
-5. **AWS CLI** or **Google Cloud CLI** for storage integration.
+2. **MongoDb** (v8.x or higher).
+3. **Mongoose** (as ODM).
+4. **Express** (4.x) installed on the server.
+5. **Cloudinary** for cloud storage.
 
 ### Steps
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/video-hosting-backend.git
+   git clone https://github.com/The-Wee-Lad/Video-Hosting-Platform
    cd video-hosting-backend
 2. Installing Dependencies
     ```
@@ -85,6 +91,78 @@ This repository contains the backend code for a video hosting platform. It provi
 
 
 ## API Endpoints
+
+### User
+
+- Register User: 
+```
+/user/register
+```
+
+- Login User
+```
+/user/login
+```
+
+- RefreshAccessToken:
+```
+/user/refresh-accessToken
+```
+
+- Logout
+```
+/user/logout
+```
+
+- change password
+```
+/user/change-pass
+```
+
+- GetCurrentUser
+```
+/user/getcurruser
+```
+
+- UpdateAccountDetails
+```
+/user/update-acc-details
+```
+- UpdateAvatar
+```
+/user/update-avatar
+```
+- UpdateCover
+```
+/user/update-cover
+```
+- Channel Info
+```
+/user/channel/:channelName
+```
+- Watch History
+```
+/user/watch-history
+```
+- Toggle Subscription Privacy Policy
+```
+/user/toggleSubsPrivacy
+```
+- Remove User
+```
+/user/remove-user
+```
+- Remove Cover Image
+```
+/user/remove-cover
+```
+- Remove Avatar
+```
+/user/remove-avtar
+```
+
+### Rest of the Api EndPoints [of videos, Subscriptions, Playlist, Likes, comments] are in PostMan Collection 
+- postman collection export file is in the Root Folder as VideoHostingBackend.postman_collection
 
 ## Development
     
@@ -134,6 +212,7 @@ Video-Hosting-Platform
 ├── .env
 └── readme.md
 </pre>
+
 
 
 
