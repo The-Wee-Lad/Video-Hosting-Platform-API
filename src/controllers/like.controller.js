@@ -43,25 +43,25 @@ const toggleCommentLike = asyncHandler(async (req, res) => {
 
 })
 
-const toggleTweetLike = asyncHandler(async (req, res) => {
-    const {tweetId} = req.params
-    if(!isValidObjectId(tweetId)){
-        throw new ApiError(400,"Invalid Id");
-    }
+// const toggleTweetLike = asyncHandler(async (req, res) => {
+//     const {tweetId} = req.params
+//     if(!isValidObjectId(tweetId)){
+//         throw new ApiError(400,"Invalid Id");
+//     }
 
-    const check = await Likes.findOneAndDelete({tweet:tweetId});
-    if(check){
-        res.status(200).json(200,{},"Successfully Removed");
-    }
+//     const check = await Likes.findOneAndDelete({tweet:tweetId});
+//     if(check){
+//         res.status(200).json(200,{},"Successfully Removed");
+//     }
 
-    const newLike = await Likes.create({
-        tweet: tweetId,
-        likedBy: req.user?._id
-    });
+//     const newLike = await Likes.create({
+//         tweet: tweetId,
+//         likedBy: req.user?._id
+//     });
 
-    res.send(200).json(new ApiResponse(200,"Liked the tweet"));
-}
-)
+//     res.send(200).json(new ApiResponse(200,"Liked the tweet"));
+// }
+// )
 
 const getLikedVideos = asyncHandler(async (req, res) => {
     
@@ -116,7 +116,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
 
 export {
     toggleCommentLike,
-    toggleTweetLike,
+    // toggleTweetLike,
     toggleVideoLike,
     getLikedVideos,
 }

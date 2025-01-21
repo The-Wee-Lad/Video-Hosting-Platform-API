@@ -4,7 +4,7 @@ import { asyncHandler } from "../utilities/asyncHandler.js";
 import { ApiError } from "../utilities/ApiError.js"
 import { uploadOnCloudinary } from "../utilities/cloudinary.js"
 import { ApiResponse } from "../utilities/ApiResponse.js";
-import { isValidObjectId } from "mongoose";
+import mongoose,{ isValidObjectId } from "mongoose";
 
 const publishVid = asyncHandler( async (req, res) => {
     const { title, description, publish = true, comments = true} = req.body;
@@ -115,7 +115,33 @@ const getVideoById = asyncHandler( async (req, res) => {
     if(!isValidObjectId(videoId)){
         throw new ApiError(400,"Invalid Id");
     }
-    const video = await Videos.findById(videoId);
+    const video = await Videos.aggregate([
+        {
+            $match:{
+                _id: new mongoose.Types.ObjectId(videoId)
+            }
+        },
+        {
+            $lookup:{
+                from: "users",
+                foreignField: "_id",
+                localField: "owner",
+                as:"owner",
+                pipeline:[
+                    {
+                        $project:{
+                            email:0,
+                            password:0,
+                            refreshToken:0,
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $unwind: "$owner"
+        }
+    ]);
 
     if(!video){
         throw new ApiError(404,"Video Does Not Exists")
@@ -199,10 +225,10 @@ const getAllVideos = asyncHandler(async (req, res) => {
     if(userId){
         if(userId != req.user?._id)
             queryFilter.isPublished = true;
-        queryFilter.userId  = userId;
         if(!isValidObjectId(userId)){
             throw new ApiError(400,"Invalid Id");
         }
+        queryFilter.userId  = new mongoose.Types.ObjectId(userId);
         if(!(await Users.findById(userId))){
             throw new ApiError(400," Userid not Found");      
         }
@@ -229,16 +255,54 @@ const getAllVideos = asyncHandler(async (req, res) => {
     
     const queryResult = await Videos.aggregate([
         {$match : queryFilter},
-        {$addFields : {"score" : {$meta : "textScore"}}},
-        {$count: "totalCount"},
-        {$sort: sortFilter}
-    ]).skip(skip).limit(limit);
+        {
+            $facet:{
+                    videos:
+                    [
+                        {
+                            $addFields : {"score" : {$meta : "textScore"},}
+                        },
+                        {
+                            $lookup:{
+                                from:"users",
+                                foreignField: "_id",
+                                localField:"owner",
+                                as:"owner",
+                            }
+                        },
+                        {
+                            $unwind:"$owner"
+                        },
+                        {
+                            $project:{
+                                "owner.email":0,
+                                "owner.password":0,
+                                "owner.refreshToken":0,
+                            }
+                        },
+                        {$sort: sortFilter},
+                        {$skip:skip},
+                        {$limit:limit},
+                    ],
+                    totalCount:[
+                        {
+                            $count:"count"
+                        }
+                    ]
+            }
+        },
+        {
+            $project:{
+                totalCount: {$arrayElemAt:["$totalCount.count",0]}
+            }
+        }
+    ]);
 
     if(typeof queryResult === undefined){
         throw new ApiError(500," No Query result from MongoDB");
     }
 
-    res.status(200).json(200,queryResult,"Fetch all videos based on query");
+    res.status(200).json(200,queryResult,"Fetch all videos based on query with totalCount");
 });
 
 export { 
