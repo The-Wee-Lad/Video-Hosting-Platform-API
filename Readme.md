@@ -24,7 +24,8 @@ This repository contains the backend code for a video hosting platform. It provi
 - **Search**
   - Search videos by title or description
   - sort searches by duration, views, date
-
+  - active pagination
+    
 - **Playlist**
   - playlist of videos can be made
 
