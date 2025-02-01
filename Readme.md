@@ -177,11 +177,11 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 
 - **Publish Video:**  
   ```
-  POST /videos
+  POST /vid/
   ```
-- **Get All Videos:**  
+- **Get All Videos:** : (With Various Search criteria for more details see postman collection) :
   ```
-  GET /videos
+  GET /vid/
   ```
 
 </details>
@@ -191,15 +191,15 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 
 - **Get Video by ID:**  
   ```
-  GET /videos/:videoId
+  GET /vid/:videoId
   ```
 - **Update Video:**  
   ```
-  PATCH /videos/:videoId
+  PATCH /vid/:videoId
   ```
 - **Delete Video:**  
   ```
-  DELETE /videos/:videoId
+  DELETE /vid/:videoId
   ```
 
 </details>
@@ -209,11 +209,11 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 
 - **Toggle Video Publish Status:**  
   ```
-  POST /videos/toggle-publish/:videoId
+  POST /vid/toggle-publish/:videoId
   ```
 - **Toggle Comments on Video:**  
   ```
-  POST /videos/toggle-comments/:videoId
+  POST /vid/toggle-comments/:videoId
   ```
 
 </details>
@@ -232,11 +232,11 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 
 - **Toggle Subscription to a Channel:**  
   ```
-  POST /subscriptions/c/:channel
+  POST /subs/c/:channel
   ```
 - **Get Subscribed Channels:**  
   ```
-  GET /subscriptions/c/:channel
+  GET /subs/c/:channel
   ```
 
 </details>
@@ -246,7 +246,7 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 
 - **Get My Subscribers:**  
   ```
-  GET /subscriptions/my-subscribers
+  GET /subs/my-subscribers
   ```
 
 </details>
@@ -262,16 +262,16 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Playlist Management</summary>
 
 - **Create Playlist:**  
-  ```POST /playlists/```
+  ```POST /playlist/```
   
 - **Get Playlist By ID:**  
-  ```GET /playlists/:playlistId```
+  ```GET /playlist/:playlistId```
   
 - **Update Playlist:**  
-  ```PATCH /playlists/:playlistId```
+  ```PATCH /playlist/:playlistId```
   
 - **Delete Playlist:**  
-  ```DELETE /playlists/:playlistId```
+  ```DELETE /playlist/:playlistId```
 
 </details>
 
@@ -279,10 +279,10 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Video in Playlist</summary>
 
 - **Add Video to Playlist:**  
-  ```PATCH /playlists/add/:videoId/:playlistId```
+  ```PATCH /playlist/add/:videoId/:playlistId```
   
 - **Remove Video from Playlist:**  
-  ```PATCH /playlists/remove/:videoId/:playlistId```
+  ```PATCH /playlist/remove/:videoId/:playlistId```
 
 </details>
 
@@ -290,7 +290,7 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>User Playlists</summary>
 
 - **Get User Playlists:**  
-  ```GET /playlists/user/:userId```
+  ```GET /playlist/user/:userId```
 
 </details>
 
@@ -302,10 +302,10 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Toggle Like on Content</summary>
 
 - **Toggle Like on Video:**  
-  ```POST /toggle/v/:videoId```
+  ```POST /like/toggle/v/:videoId```
   
 - **Toggle Like on Comment:**  
-  ```POST /toggle/c/:commentId```
+  ```POST /like/toggle/c/:commentId```
   
 <!-- Uncomment and modify the following if needed -->
 
@@ -317,8 +317,8 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <details>
 <summary>Liked Content</summary>
 
-- **Get Liked Videos:**  
- ```GET /videos```
+- **Get ALl User Liked Videos:**  
+ ```GET /like/videos```
 
 </details>
 
@@ -330,10 +330,10 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Manage Comments</summary>
 
 - **Get Comments for a Video:**  
-  ```GET /:videoId```
+  ```GET /comment/:videoId```
   
 - **Add Comment to a Video:**  
-  ```POST /:videoId```
+  ```POST /comment/:videoId```
   
 </details>
 
@@ -341,10 +341,10 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Update/Delete Comment</summary>
 
 - **Delete Comment:**  
-  ```DELETE /c/:commentId```
+  ```DELETE /comment/c/:commentId```
   
 - **Update Comment:**  
-  ```PATCH /c/:commentId```
+  ```PATCH /comment/c/:commentId```
 
 </details>
 
