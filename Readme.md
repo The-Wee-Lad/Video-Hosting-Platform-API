@@ -444,4 +444,7 @@ Video-Hosting-Platform
 
 ---
 
+## Database Schema Used : 
+
+<img src = "./DatabaseSchema.jpg">
 

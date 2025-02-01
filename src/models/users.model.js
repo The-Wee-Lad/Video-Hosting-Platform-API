@@ -33,10 +33,10 @@ const userSchema = new Schema(
         coverImage: {
             type: String,
         },
-        watchHistory: {
+        watchHistory: [{
             type: Schema.Types.ObjectId,
             ref: "Videos"
-        },
+        }],
         refreshToken: {
             type: String
         },

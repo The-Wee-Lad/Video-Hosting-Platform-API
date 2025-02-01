@@ -23,7 +23,7 @@ const videoSchema = new Schema({
         required : [true, "Duration is Required"]
     },
     views : {
-        type : String,
+        type : Number,
         default : 0
     },
     isPublished : {
