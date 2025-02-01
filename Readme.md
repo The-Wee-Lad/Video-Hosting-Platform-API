@@ -1,5 +1,5 @@
-# Video Hosting Platform Backend
-I’ve developed a scalable and secure backend for a video hosting platform, similar to YouTube.
+# Video Hosting Platform API
+I have made a generic VideoHosting backend for "Youtube" like System.
 
  This repository contains the core backend code that provides RESTful APIs for managing users, videos, comments, likes, and other essential operations. Designed with performance and scalability in mind, this system is built to handle growing traffic and user interaction while ensuring robust security measures.
 
@@ -25,7 +25,8 @@ I’ve developed a scalable and secure backend for a video hosting platform, sim
 - **Search**
   - Search videos by title or description
   - sort searches by duration, views, date
-
+  - active pagination
+    
 - **Playlist**
   - playlist of videos can be made
 
