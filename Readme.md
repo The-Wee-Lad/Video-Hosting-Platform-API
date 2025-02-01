@@ -262,16 +262,16 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Playlist Management</summary>
 
 - **Create Playlist:**  
-  `POST /playlists/`
+  ```POST /playlists/```
   
 - **Get Playlist By ID:**  
-  `GET /playlists/:playlistId`
+  ```GET /playlists/:playlistId```
   
 - **Update Playlist:**  
-  `PATCH /playlists/:playlistId`
+  ```PATCH /playlists/:playlistId```
   
 - **Delete Playlist:**  
-  `DELETE /playlists/:playlistId`
+  ```DELETE /playlists/:playlistId```
 
 </details>
 
@@ -279,10 +279,10 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Video in Playlist</summary>
 
 - **Add Video to Playlist:**  
-  `PATCH /playlists/add/:videoId/:playlistId`
+  ```PATCH /playlists/add/:videoId/:playlistId```
   
 - **Remove Video from Playlist:**  
-  `PATCH /playlists/remove/:videoId/:playlistId`
+  ```PATCH /playlists/remove/:videoId/:playlistId```
 
 </details>
 
@@ -290,7 +290,7 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>User Playlists</summary>
 
 - **Get User Playlists:**  
-  `GET /playlists/user/:userId`
+  ```GET /playlists/user/:userId```
 
 </details>
 
@@ -302,10 +302,10 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Toggle Like on Content</summary>
 
 - **Toggle Like on Video:**  
-  `POST /toggle/v/:videoId`
+  ```POST /toggle/v/:videoId```
   
 - **Toggle Like on Comment:**  
-  `POST /toggle/c/:commentId`
+  ```POST /toggle/c/:commentId```
   
 <!-- Uncomment and modify the following if needed -->
 
@@ -318,7 +318,7 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Liked Content</summary>
 
 - **Get Liked Videos:**  
-  `GET /videos`
+ ```GET /videos```
 
 </details>
 
@@ -330,10 +330,10 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Manage Comments</summary>
 
 - **Get Comments for a Video:**  
-  `GET /:videoId`
+  ```GET /:videoId```
   
 - **Add Comment to a Video:**  
-  `POST /:videoId`
+  ```POST /:videoId```
   
 </details>
 
@@ -341,17 +341,19 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 <summary>Update/Delete Comment</summary>
 
 - **Delete Comment:**  
-  `DELETE /c/:commentId`
+  ```DELETE /c/:commentId```
   
 - **Update Comment:**  
-  `PATCH /c/:commentId`
+  ```PATCH /c/:commentId```
 
 </details>
 
 <br>
 
 
-> **ALL the API Endpoints** of **Videos**, **Subscriptions**, **Playlists**, **Likes**, and **Comments** are in the **Postman Collection**.
+> **ALL the API Endpoints** of **Videos**, **Subscriptions**, **Playlists**, **Likes**, and **Comments** are in the **Postman Collection**. For all input formats and More Endpoints Refer to it.
+
+
 ## Folder Structure
 
 <details>
