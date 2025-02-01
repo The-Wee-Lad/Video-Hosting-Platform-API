@@ -1,4 +1,4 @@
-# Video Hosting Platform Backend
+# Video Hosting Platform API
 I have made a generic VideoHosting backend for "Youtube" like System.
 
 This repository contains the backend code for a video hosting platform. It provides RESTful APIs for managing users, videos, and related operations. The backend is built with scalability, security, and performance in mind.
