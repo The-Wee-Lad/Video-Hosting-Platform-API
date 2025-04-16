@@ -1,12 +1,16 @@
 import multer from "multer";
 import path from "path";
+import { publicDir } from "../constants.js";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './src/public/temp')
+        cb(null, publicDir)
     },
-    filename: function (req, file, cb) {       
-        cb(null, file.originalname+Date.now())
+    filename: function (req, file, cb) {  
+        let fileName = "" + Date.now() + file.filename;
+        console.log("In Multer... ");
+        cb(null, fileName);
+        console.log("Exit Multer...");
     }
 });
 
@@ -27,5 +31,6 @@ const uploadVideos = multer({
         fileSize: 1024*1024
     }
 });
+
 
 export { upload, uploadVideos };

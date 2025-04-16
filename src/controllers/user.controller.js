@@ -14,6 +14,7 @@ import { Comments } from "../models/comments.model.js";
 import { Likes } from "../models/likes.model.js";
 import { Playlists } from "../models/playlist.model.js";
 import { Subscriptions } from "../models/subscriptions.model.js";
+import { clearPublicDir } from "../constants.js";
 
 const generateAccessAndRefreshToken = async (userid) => {
     
@@ -33,35 +34,49 @@ const generateAccessAndRefreshToken = async (userid) => {
 
 const registerUser = asyncHandler( async (req, res) => {
     
+
+    
     // getting user details from frontend through req.body;
     const {fullname, email, username, password} = req.body;
     
     // checking if the data sent is valid
     if([fullname, email, username, password].some((field) => {
         return (field?.trim() === "") || !(field);
-        })) {
+    })) {
         throw new ApiError(400,"All Feilds are Required");
     }
-
+    
     //checking if User already exits
     if(await Users.findOne({$or : [{username : username}, {email : email}]})){
         throw new ApiError(409,"User Already exists");
     }
-
+    
+    
+    
+    
     const avatarLocalPath = req.files?.avatar?.[0]?.path;
     const coverLocalPath = req.files?.coverImage?.[0]?.path;
-
+    
+    // console.log(avatarLocalPath, coverLocalPath);
+    
     //Checking if avatar image is included or not
     // if(!avatarLocalPath){
-    //     throw new ApiError(400,"Avatar image required");
-    // }
-
+        //     throw new ApiError(400,"Avatar image required");
+        // }
+        
     const avatarResponse = await uploadOnCloudinary(avatarLocalPath);
     const coverImageResponse = await uploadOnCloudinary(coverLocalPath);
-
+        
     if(!avatarResponse){
         throw new ApiError(500,"Failed to upload the avatar image");
     }
+    
+    if(coverLocalPath && !coverImageResponse){
+        throw new ApiError(500,"Failed to upload the coverImage");
+    }
+    
+    // console.log("Debug this >> at start");
+    // clearPublicDir(avatarLocalPath,coverLocalPath);
 
     const user = await Users.create([{
         fullname: fullname,
@@ -78,8 +93,8 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError(500,"Error in database Operation Create : USER");
     }
 
-    return res.status(201).json(new ApiResponse(200, createdUser, "User Created SuccessFully"));
-    
+    res.status(201).json(new ApiResponse(200, createdUser, "User Created SuccessFully"));
+    console.log("User registered");
 });
 
 const loginUser = asyncHandler( async (req, res) => {
@@ -112,7 +127,7 @@ const loginUser = asyncHandler( async (req, res) => {
     .cookie("accessToken",accessToken,cookieOptions)
     .cookie("refreshToken",refreshToken,cookieOptions)
     .json(new ApiResponse(200,{user: user, accessToken, refreshToken},"User authenticated"));
-
+    console.log("User Login");
 });
 
 const refreshAccessToken = asyncHandler( async (req, res) => {
@@ -157,6 +172,7 @@ const logout = asyncHandler( async (req, res) => {
     .clearCookie("refreshToken",cookieOptions)
     .clearCookie("accessToken",cookieOptions)
     .json(new ApiResponse(200,{},"User Logged Out"));
+    console.log("user logged out");
 });
 
 
@@ -189,6 +205,7 @@ const changePassword = asyncHandler( async (req,res) => {
     .cookie("accessToken", accessToken, cookieOptions)
     .cookie("refreshToken", refreshToken, cookieOptions)
     .json(new ApiResponse(200, {accessToken, refreshToken}, "Password Changed Carefully"));
+    console.log("Password changed");
 });
 
 
@@ -200,6 +217,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
     res
     .status(200)
     .json(new ApiResponse(200, user, "Current user Data SuccessFully sent"));
+    console.log("User Fetched : ",user);
 });
 
 const updateAccountDetails = asyncHandler( async (req,res) => {
@@ -312,7 +330,8 @@ const getUserChannelInfo = asyncHandler( async(req, res) => {
     if(!channelName?.trim()){
         throw new ApiError(400,"Invalid Channel Name");
     }
-
+    console.log("Channel Name : ", channelName);
+    const userId = new mongoose.Types.ObjectId(req.user._id);
     const channel = await  Users.aggregate([
         {
             $match: {
@@ -345,7 +364,7 @@ const getUserChannelInfo = asyncHandler( async(req, res) => {
                 },
                 isSubscribed: {
                     $cond:{
-                        if: {  $in: [req.user?._id, "$subscribers.subscriber"]},
+                        if: {  $in: [userId, "$subscribers.subscriber"]},
                         then : true,
                         else : false
                     }
@@ -476,17 +495,19 @@ const removeAvatar = asyncHandler( async (req, res) => {
 
 const removeUser = asyncHandler( async (req, res) => {
     
-    const {usernameOrEmail : userid, password} = req.body;
-    
-    if([userid, password].some((elem) => {
+    const {usernameOrEmail, password} = req.body;
+    console.log(usernameOrEmail,password);
+
+    if([usernameOrEmail, password].some((elem) => {
         return !(elem?.trim()) || !elem})){
         throw new ApiError(400, "All feilds are required");
     }
-    if(userid != req.user?._id){
+    
+    if(usernameOrEmail != req.user?.username && usernameOrEmail != req.user?.email){
         throw new ApiError(401, "Invalid Credentials");
     }
     
-    let user =await Users.findOne({$or : [{username: userid}, {email: userid}]});
+    let user =await Users.findOne({$or : [{username: usernameOrEmail}, {email: usernameOrEmail}]});
     
     if(!(await user.isPasswordCorrect(password))){
         throw new ApiError(401," Invalid Credentials ");
@@ -530,7 +551,7 @@ export {
 };
 
 /*
-TODO 
+TODO:
 
 Models : like, comments, playlist, tweet(maybe)
 

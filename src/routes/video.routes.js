@@ -8,7 +8,7 @@ import { publishVid,
         deleteVideo,
         updateVideo,
         toggleComments
-    } from "../controllers/video.controllers.js";
+    } from "../controllers/video.controller.js ";
 
 const router = Router();
 

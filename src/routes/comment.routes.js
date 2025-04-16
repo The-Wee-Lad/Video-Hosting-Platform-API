@@ -5,13 +5,13 @@ import {
         getVideoComments,
         addComment,
         deleteComment,
-        updateComment
+        updateComment,
         } from "../controllers/comment.controller.js"
 
 const router = Router();
 
 router.use(verifyJwt);
 router.route("/:videoId").get(getVideoComments).post(upload.none(),addComment);
-router.route("/c/:commentId").delete(deleteComment).patch(upload.noneone(),updateComment);
+router.route("/c/:commentId").delete(deleteComment).patch(upload.none(),updateComment);
 
 export default router;
