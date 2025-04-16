@@ -6,7 +6,7 @@ const storage = multer.diskStorage({
         cb(null, './src/public/temp')
     },
     filename: function (req, file, cb) {       
-        cb(null, file.originalname)
+        cb(null, file.originalname+Date.now())
     }
 });
 
@@ -19,7 +19,7 @@ const uploadVideos = multer({
     fileFilter: function(req, file, callback){
         let ext = path.extname(file.originalname);
         if(! ['.mp4', '.mov', '.mpeg4', '.avi', '.gif'].includes(ext)){
-            callback(new ApiError(400,"Nothing But Videos are allowed"));
+            return callback(new ApiError(400,"Nothing But Videos are allowed"));
         }
         callback(null, true);
     },

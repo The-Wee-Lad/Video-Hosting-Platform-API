@@ -9,13 +9,13 @@ const verifyJwt = asyncHandler( async (req, res, next) => {
         const receivedAccessToken = req.cookies?.accessToken || req.headers.authorization?.replace("Bearer","")?.trim();
         
         if(!receivedAccessToken){
-            throw new ApiError(401,"Unauthorised Access");
+            throw new ApiError(401,"Unauthorised Access [No Token Found]");
         }
     
         const decodedAccessToken = jwt.verify(receivedAccessToken, process.env.ACCESS_TOKEN_SECRET);
         const user =await Users.findById(decodedAccessToken?._id);
         if(!user){
-            throw new ApiError(401,"Invalid Access Token");
+            throw new ApiError(401,"Invalid Access Token [Token faolire");
         }
 
         req.user = user;
