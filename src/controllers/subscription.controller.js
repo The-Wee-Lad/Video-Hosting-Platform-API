@@ -5,26 +5,27 @@ import { Users } from "../models/users.model.js";
 import { Subscriptions } from "../models/subscriptions.model.js";
 import mongoose from "mongoose";
 
-const toggleSubscription = asyncHandler( async (req, res) => {
+const toggleSubscription = asyncHandler(async (req, res) => {
 
-    const {channel} = req.params;
-    
+    const { channel } = req.params;
 
-    const channelDoc = await Users.findOne({username : channel});
-    if(!channelDoc){
-        throw new ApiError(404,"No such Channel Exists");
+
+    const channelDoc = await Users.findOne({ username: channel });
+    if (!channelDoc) {
+        throw new ApiError(404, "No such Channel Exists");
     }
 
-    const subscription = Subscriptions.findOne({
+    const subscription = await Subscriptions.findOne({
         channel: channelDoc?._id,
         subscriber: req.user?._id
     });
 
+    // console.log(subscription);
     let data = {}, message;
-    if(subscription){
+    if (subscription) {
         await Subscriptions.findByIdAndDelete(subscription?._id);
         message = "Subscription Successfully Removed";
-    }else{
+    } else {
         data = await Subscriptions.create({
             channel: channelDoc?._id,
             subscriber: req.user?._id
@@ -33,15 +34,17 @@ const toggleSubscription = asyncHandler( async (req, res) => {
     }
 
     res.status(200).json(new ApiResponse(200, data, message));
+    console.log(message);
+    
 });
 
-const getUserChannelSubscribers = asyncHandler( async (req, res) => {
+const getUserChannelSubscribers = asyncHandler(async (req, res) => {
     // const user = await Users.findById(req.user?._id);
 
     const user = await Users.aggregate([
         {
             $match: {
-                _id: mongoose.Types.ObjectId(req.user?._id)
+                _id: new mongoose.Types.ObjectId(req.user?._id)
             }
         },
         {
@@ -59,52 +62,54 @@ const getUserChannelSubscribers = asyncHandler( async (req, res) => {
                 localField: "subscribers.subscriber",
                 foreignField: "_id",
                 as: "subscribers",
-                pipeline:[
+                pipeline: [
                     {
-                        $match:{
+                        $match: {
                             privateSubscription: false
                         }
                     },
                     {
-                        $project:{
-                            username:1,
-                            fullname:1,
-                            avatar:1,
-                            coverImage:1,
+                        $project: {
+                            username: 1,
+                            fullname: 1,
+                            avatar: 1,
+                            coverImage: 1,
                         }
                     }
                 ]
             }
         },
         {
-            $project:{
-                password:0,
-                refreshToken:0
+            $project: {
+                password: 0,
+                refreshToken: 0
             }
         }
     ]);
 
-    res.status(200).json(new ApiResponse(200,user[0].subscribers,"Subscribers Fetched successfully"));
+    res.status(200).json(new ApiResponse(200, user[0].subscribers, "Subscribers Fetched successfully"));
 
 });
 
-const getSubscribedChannels = asyncHandler( async (req, res) => {
-    const {channel} = req.params;
-    
+const getSubscribedChannels = asyncHandler(async (req, res) => {
+    const { channel } = req.params;
 
-    const channelDoc = await Users.findOne({username : channel});
-    if(!channelDoc){
-        throw new ApiError(404,"No such Channel Exists");
+
+    const channelDoc = await Users.findOne({ username: channel });
+    if (!channelDoc) {
+        throw new ApiError(404, "No such Channel Exists");
     }
 
-    if(channelDoc?._id != req.user?._id && channelDoc?.privateSubscription){
+    console.log(channelDoc);
+    
+    if (channelDoc?._id?.toString() != req.user?._id?.toString() && channelDoc?.privateSubscription) {
         throw new ApiError(401, "Channels Subscriptions List is Private for this User");
     }
-    
+
     const user = await Users.aggregate([
         {
             $match: {
-                username: "adi123"
+                username: channel
             }
         },
         {
@@ -161,7 +166,7 @@ const getSubscribedChannels = asyncHandler( async (req, res) => {
         }
     ]);
 
-    res.status(200).json(new ApiResponse(200,user[0].channelsSubscribed, "List of subscribed channels returned"));
+    res.status(200).json(new ApiResponse(200, user[0].channelsSubscribed, "List of subscribed channels returned"));
 }
 );
 
