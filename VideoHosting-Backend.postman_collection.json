@@ -1,0 +1,1355 @@
+{
+	"info": {
+		"_postman_id": "f134bfd4-7c50-4cc1-b1c5-deb5a8d02952",
+		"name": "VideoHosting  Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40788084"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "RegisterUser",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "fullname",
+									"value": "test7",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "test7@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "test7Name",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "test7password",
+									"type": "text"
+								},
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": "c:\\Users\\Aditya Narayan\\Desktop\\Video-Hosting-Platform-API\\forTesting\\testAvatar1.jpg"
+								},
+								{
+									"key": "coverImage",
+									"type": "file",
+									"src": "c:\\Users\\Aditya Narayan\\Desktop\\Video-Hosting-Platform-API\\forTesting\\testCover1.webp"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/user/register",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "usernameOrEmail",
+									"value": "test1name",
+									"description": "email",
+									"type": "text"
+								},
+								{
+									"key": "usernameOrEmail",
+									"value": "123",
+									"description": "username",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "test1password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/user/login",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Logout",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{server}}/user/logout",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User RefreshAccessToken",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/user/refresh-accessToken",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"refresh-accessToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User change Password",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "oldPassword",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "confirmPassword",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/user/change-pass",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"change-pass"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User GetCurrentUser",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/user/getcurruser",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"getcurruser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User WatchHistory",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/user/watch-history",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"watch-history"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Channel Info",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/user/channel/:channelName",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"channel",
+								":channelName"
+							],
+							"variable": [
+								{
+									"key": "channelName",
+									"value": "test1name"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Update Cover",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "coverImage",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/user/update-cover",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"update-cover"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Change Subscription Privacy Policy",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/user/toggleSubsPrivacy",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"toggleSubsPrivacy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User RemoveUser",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "usernameOrEmail",
+									"value": "test8name",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "test8password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/user/remove-user",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"remove-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User UpdateAccountDetails",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "fullname",
+									"value": "Aditya Narayan Rai",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/user/update-acc-details",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"update-acc-details"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User RemoveAvtar",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/user/remove-avtar",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"remove-avtar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User RemoveCoverImage",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/user/remove-cover",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"remove-cover"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User UpdateAvatar",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/user/update-avatar",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"user",
+								"update-avatar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Subscriber",
+			"item": [
+				{
+					"name": "Subs Get Channels A User is Subscribed to",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/subs/c/:channel",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"subs",
+								"c",
+								":channel"
+							],
+							"variable": [
+								{
+									"key": "channel",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subs Toggle Subscription",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/subs/c/:channel",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"subs",
+								"c",
+								":channel"
+							],
+							"variable": [
+								{
+									"key": "channel",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subs My Subscribers",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/subs/my-subscribers",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"subs",
+								"my-subscribers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Video",
+			"item": [
+				{
+					"name": "Vid Publish A video",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "Death Monologue",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "This is the legendary monologue from blade runner when the guy dies.",
+									"type": "text"
+								},
+								{
+									"key": "publish",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "comments",
+									"value": "false",
+									"type": "text"
+								},
+								{
+									"key": "video",
+									"type": "file",
+									"src": "c:\\Users\\Aditya Narayan\\Desktop\\Video-Hosting-Platform-API\\forTesting\\Sample3.mp4"
+								},
+								{
+									"key": "thumbnail",
+									"type": "file",
+									"src": "c:\\Users\\Aditya Narayan\\Desktop\\Video-Hosting-Platform-API\\forTesting\\Sample3Thumbnail.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/vid/",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"vid",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vid change comments Status",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/vid/toggle-comments/:videoId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"vid",
+								"toggle-comments",
+								":videoId"
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vid Change Video Publish Status",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/vid/toggle-publish/:videoId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"vid",
+								"toggle-publish",
+								":videoId"
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vid GetVideoById",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/vid/:videoId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"vid",
+								":videoId"
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": "680059ebf301636fc7b42b97"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vid delete Video By Id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/vid/:videoId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"vid",
+								":videoId"
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vid UpdateVideo",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "legitimate Video",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "I change its Status",
+									"type": "text"
+								},
+								{
+									"key": "published",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/vid/:videoId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"vid",
+								":videoId"
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": "6800722a131e3f64b3bf1a24"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Vid Text Search And Sorting",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/vid/getAllVideos?page&limit&query&sortBy=&sortBy=&sortBy&sortType&sortType&sortType&userId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"vid",
+								"getAllVideos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null
+								},
+								{
+									"key": "limit",
+									"value": null
+								},
+								{
+									"key": "query",
+									"value": null
+								},
+								{
+									"key": "sortBy",
+									"value": ""
+								},
+								{
+									"key": "sortBy",
+									"value": ""
+								},
+								{
+									"key": "sortBy",
+									"value": null
+								},
+								{
+									"key": "sortType",
+									"value": null
+								},
+								{
+									"key": "sortType",
+									"value": null
+								},
+								{
+									"key": "sortType",
+									"value": null
+								},
+								{
+									"key": "userId",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "Comment GetVideoComments",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/comment/:videoId?page&limit",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"comment",
+								":videoId"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": null
+								},
+								{
+									"key": "limit",
+									"value": null
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comment DeleteComment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/comment/c/:commentId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"comment",
+								"c",
+								":commentId"
+							],
+							"variable": [
+								{
+									"key": "commentId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comment UpdateComment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content",
+									"value": "The death waits you too..........",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/comment/c/:commentId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"comment",
+								"c",
+								":commentId"
+							],
+							"variable": [
+								{
+									"key": "commentId",
+									"value": "680143a34f14014921013462"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Comment AddComment",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "content",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/comment/:videoId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"comment",
+								":videoId"
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Likes",
+			"item": [
+				{
+					"name": "Likes GetAllLikedVideos",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/like/videos",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"like",
+								"videos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Likes ToggleCommentLike",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/like/toggle/c/:videoId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"like",
+								"toggle",
+								"c",
+								":videoId"
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Likes toggleVideoLike",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/like/toggle/v/:videoId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"like",
+								"toggle",
+								"v",
+								":videoId"
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": "680059ebf301636fc7b42b97"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Playlist",
+			"item": [
+				{
+					"name": "Playlist getmyplaylists",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/playlist/user/:userId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								"user",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "68000f8e54cd8fc445356490",
+									"type": "string"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Playlist DeletePlaylist",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/playlist/:playlistId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								":playlistId"
+							],
+							"variable": [
+								{
+									"key": "playlistId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Playlist UpdatePlaylist",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "isPublic",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/playlist/:playlistId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								":playlistId"
+							],
+							"variable": [
+								{
+									"key": "playlistId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Playlist add video",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "isPublic",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/playlist/add/:videoId/:playlistId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								"add",
+								":videoId",
+								":playlistId"
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": "6800722a131e3f64b3bf1a24"
+								},
+								{
+									"key": "playlistId",
+									"value": "680187001a3c303e7ed238cc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Playlist GetPlaylistById",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/playlist/:playlistId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								":playlistId"
+							],
+							"variable": [
+								{
+									"key": "playlistId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Playlist removeVideo",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/playlist/remove/:videoId/:playlistId",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								"remove",
+								":videoId",
+								":playlistId"
+							],
+							"variable": [
+								{
+									"key": "videoId",
+									"value": "680059ebf301636fc7b42b97"
+								},
+								{
+									"key": "playlistId",
+									"value": "680187001a3c303e7ed238cc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Playlist Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Test Playlist",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Test Playlist",
+									"type": "text"
+								},
+								{
+									"key": "isPublic",
+									"value": "false",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/playlist/",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"playlist",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Healthcheck",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server}}/healthcheck/",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"healthcheck",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

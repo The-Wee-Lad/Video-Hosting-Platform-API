@@ -82,6 +82,7 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 
 
 ## API Endpoints
+> There Are 30+ End points for all of them **Import Postman Collction**
 > **All routes are protected by JWT Authentication.**  
 > The `verifyJWT` middleware ensures that only authenticated users can access these endpoints.
 ### User Endpoints
