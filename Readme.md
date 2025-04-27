@@ -2,7 +2,9 @@
 I have made a generic VideoHosting backend for "Youtube" like System.
 
  This repository contains the core backend code that provides RESTful APIs for managing users, videos, comments, likes, and other essential operations. Designed with performance and scalability in mind, this system is built to handle growing traffic and user interaction while ensuring robust security measures.
-
+<br>
+> There Are 30+ End points, for all of them [**Import this Postman Collection**](./VideoHosting-Backend.postman_collection.json) from ./VideoHosting-Backend.postman_collection.json. 😁 
+<br>
 
 ---
 
@@ -82,7 +84,8 @@ I have made a generic VideoHosting backend for "Youtube" like System.
 
 
 ## API Endpoints
-> There Are 30+ End points for all of them **Import Postman Collction**
+
+
 > **All routes are protected by JWT Authentication.**  
 > The `verifyJWT` middleware ensures that only authenticated users can access these endpoints.
 ### User Endpoints
