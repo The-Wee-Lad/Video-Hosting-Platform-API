@@ -121,4 +121,5 @@ settings.json
 src/public/temp
 src/public/temp
 
+/forTesting
 # End of https://mrkandreev.name/snippets/gitignore-generator/#Node
